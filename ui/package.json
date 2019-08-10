@@ -1,0 +1,37 @@
+{
+  "name": "ui",
+  "version": "0.0.1",
+  "description": "The UI for the movie recommendation system",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "pug": "^2.0.4",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "zuix-dist": "^1.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon app.js localhost 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlmayentry2019/movie-recommendation-system.git"
+  },
+  "keywords": [
+    "movie",
+    "recommendation",
+    "machine",
+    "learning"
+  ],
+  "author": "Thanh Hoang Le",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mlmayentry2019/movie-recommendation-system/issues"
+  },
+  "homepage": "https://github.com/mlmayentry2019/movie-recommendation-system#readme"
+}

@@ -1,0 +1,61 @@
+<html>
+
+<head>
+  <title>Prediction</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>
+</head>
+
+<body>
+  <h1>Prediction</h1>
+  </h1>
+  <div>
+    <input type="file" id="image" name="image" /><br><br>
+    <img id="preview" height="200" width="200"/><br><br>
+    <input type="button" id="upload" value='Upload' /><br><br>
+  </div>
+  <div id="result">
+    <table>
+      <tr>
+        <td>Prediction:</td>
+        <td id="prediction"></td>
+      </tr>
+      <tr>
+          <td>Probability:</td>
+          <td id="probability"></td>
+        </tr>
+    </table>
+
+  </div>
+</body>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#image").change(function(envt) {
+      const preview = document.getElementById('preview');
+      preview.src = URL.createObjectURL(event.target.files[0]);
+    });
+    $("#upload").click(function () {
+      var fd = new FormData();
+      var files = $('#image')[0].files[0];
+      fd.append('image', files);
+
+      $.ajax({
+        url: 'upload',
+        type: 'post',
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            $("#prediction").html(response.prediction);
+            $("#probability").html(response.probability + '%');
+        },
+        error: function(xhr){
+          alert("An error occured: " + xhr.status + " " + xhr.statusText);
+        }
+      });
+    });
+  }); 
+</script>
+
+</html>

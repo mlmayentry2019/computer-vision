@@ -1,14 +1,14 @@
 var express = require('express');
 var app = express();
 var rp = require('request-promise');
-var bodyParser = require("body-parser");
+const fileUpload = require('express-fileupload');
 
 const host = 'localhost';
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// default options
+app.use(fileUpload());
 
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views','./views');
 
 app.get('/', async function(req, res) {
@@ -20,6 +20,13 @@ app.get('/', async function(req, res) {
    } catch(err) {
       console.error(err)
    }
+});
+
+app.post('/upload', function(req, res) {
+   console.log(req.files.image.name)
+   return res.status(200).send({
+      prediction: "pumkin", probability: 60
+   });
 });
 
 app.listen(3000);

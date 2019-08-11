@@ -4,40 +4,45 @@
 import joblib
 import pandas as pd
 from flask import Flask, jsonify, request
-
-import sys
-sys.path.append('/app')
+from PIL import Image
+from keras.models import load_model
+import keras
+from keras.preprocessing import image
+from keras.applications.imagenet_utils import preprocess_input, decode_predictions
+import numpy as np
 
 # Your API definition
 app = Flask(__name__)
 
+@app.route('/image/predict', methods=['POST'])
+def predict():
+    f = request.files['img_tomato']
+    im = Image.open(f)
+    # size = 224, 224
+    # im.thumbnail(size)
 
-#@app.route('/top_trend', methods=['GET'])
-#def topTrend():
-#    top_rating = df_rating.nlargest(20, ['rating', 'timestamp'])
-#    top_rating_list = top_rating['movieId'].astype(str).tolist()
+    new_image = load_image(im)
+    # check prediction
+    preds = model.predict(new_image)
+    #print(preds)
 
-#    df_movie['id'] = df_movie['id'].astype(str)
-#    top_trend_movies = df_movie[df_movie['id'].isin(top_rating_list)]
-#    return top_trend_movies.to_json()
-@app.route('/get_title', methods=['GET'])
-def getTitle():
+    pred_probas = model.predict_proba(new_image)
+    pred_classes = model.predict_classes(new_image)
+
+    print(preds, pred_probas, pred_classes)
+
     return "Project 3 Computer Vision detects weapon"
 
+def load_image(img, show=False):
+    img_tensor = image.img_to_array(img)                    # (height, width, channels)
+    img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    #img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
+    img_tensor = preprocess_input(img_tensor)
+
+    return img_tensor
+
 if __name__ == '__main__':
-    
-    # content-based filtering
-    # smd, cosine_sim = cb_filter(df_movie, links_small, credits, keywords)
-    #smd = joblib.load("./smd.pkl")
-    #cosine_sim = joblib.load("./cosine_sim.pkl")
-    
-    # svd, id_map = collab_filter(df_movie, df_rating, links_small, credits, keywords, smd)
-    #svd = joblib.load("./svd.pkl")
-    #id_map = joblib.load("./id_map.pkl")
-
-    #smd = smd.reset_index()
-    #titles = smd['title']
-    #indices = pd.Series(smd.index, index=smd['title'])
-
-    #print(hybrid(1, 'Avatar'))
+    model = load_model('all_freezed.h5')
+    model._make_predict_function()
+    keras.backend.set_image_dim_ordering('tf')
     app.run(debug=True, host='0.0.0.0')

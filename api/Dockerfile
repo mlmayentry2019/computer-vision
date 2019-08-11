@@ -12,6 +12,7 @@ RUN /opt/conda/bin/conda install -c conda-forge scikit-surprise
 COPY . /app
 
 #RUN /opt/conda/bin/python models.py
+RUN chmod 644 app.py
 
 ENTRYPOINT [ "/opt/conda/bin/python" ]
 

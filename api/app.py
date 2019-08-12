@@ -16,12 +16,10 @@ app = Flask(__name__)
 
 @app.route('/image/predict', methods=['POST'])
 def predict():
-    f = request.files['img_tomato']
+    f = request.files['image']
     im = Image.open(f)
-    # size = 224, 224
-    # im.thumbnail(size)
-
     new_image = load_image(im)
+    new_image = preprocess_input(new_image)
     # check prediction
     preds = model.predict(new_image)
     #print(preds)
@@ -29,9 +27,21 @@ def predict():
     pred_probas = model.predict_proba(new_image)
     pred_classes = model.predict_classes(new_image)
 
-    print(preds, pred_probas, pred_classes)
+    print(pred_classes)
 
-    return "Project 3 Computer Vision detects weapon"
+    if pred_classes == 0 :
+        object = 'pumpkin'
+    elif pred_classes == 1:
+        object = 'tomato'
+    else:
+        object = 'watermelon'
+    
+    probability = str(pred_probas[:,pred_classes][0][0])
+
+    return jsonify(
+        object = object,
+        probability = probability
+    )
 
 def load_image(img, show=False):
     img_tensor = image.img_to_array(img)                    # (height, width, channels)
@@ -42,7 +52,7 @@ def load_image(img, show=False):
     return img_tensor
 
 if __name__ == '__main__':
-    model = load_model('all_freezed.h5')
+    model = load_model('da_last4_layers.h5')
     model._make_predict_function()
     keras.backend.set_image_dim_ordering('tf')
     app.run(debug=True, host='0.0.0.0')

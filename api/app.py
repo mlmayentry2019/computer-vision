@@ -22,12 +22,9 @@ def predict():
     new_image = preprocess_input(new_image)
     # check prediction
     preds = model.predict(new_image)
-    #print(preds)
 
     pred_probas = model.predict_proba(new_image)
     pred_classes = model.predict_classes(new_image)
-
-    print(pred_classes)
 
     if pred_classes == 0 :
         object = 'pumpkin'

@@ -12,6 +12,6 @@ curl localhost:3000
 
 ## Build docker
 ```
-docker build -t project3/computer-vision-ui:0.1 .
-docker run -d -p 3000:3000 project3/computer-vision-ui:0.1
+docker build -t hoanglt705/computer-vision-ui:0.1 .
+docker run -d -p 3000:3000 hoanglt705/computer-vision-ui:0.1
 ```
